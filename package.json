@@ -37,6 +37,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
+    "react-native-bootsplash": "^7.0.1",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-indicators": "^0.17.0",
     "react-native-masonry-list": "^2.16.2",

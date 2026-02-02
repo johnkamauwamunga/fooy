@@ -44,7 +44,7 @@ const RecipeCard = ({ item, index, navigation }) => {
   const isEven = index % 2 === 0;
   return (
     <Animated.View
-      entering={FadeInDown.delay(100).delay(600).springify().damping(12)}
+      entering={FadeInDown.delay(600).duration(500).springify().damping(12)}
     >
       <Pressable
         onPress={() => navigation.navigate("RecipeDetails", { ...item })}

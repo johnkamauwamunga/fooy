@@ -5,7 +5,7 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 const Categories = ({ categories, activeCategory, handleChangeCategory }) => {
   return (
     <Animated.View
-      entering={FadeInDown.delay(100).delay(600).springify().damping(12)}
+      entering={FadeInDown.delay(100).duration(200).springify().damping(12)}
     >
       <ScrollView
         horizontal

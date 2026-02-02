@@ -4,42 +4,54 @@
     "slug": "Foodie",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "foodie",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+
+    "splash": {
+      "image": "./assets/images/logo.png", // ← Use the generated bootsplash logo
+      "resizeMode": "contain",
+      "backgroundColor": "#FBBF24", // Amber background (matches bootsplash)
+      "imageWidth": 200 // Same width as you generated
+    },
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#FBBF24" // Same amber color
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.yourname.foodie" // Add your package name
     },
+
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/pizza.png"
     },
+
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/logo.png", // ← Use bootsplash logo here too
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#FBBF24",
           "dark": {
+            "image": "./assets/images/logo.png",
             "backgroundColor": "#000000"
           }
         }
       ]
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
