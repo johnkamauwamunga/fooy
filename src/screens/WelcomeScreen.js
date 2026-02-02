@@ -1,112 +1,94 @@
 import { useEffect } from "react";
 import { Image, StatusBar, Text, View } from "react-native";
 import Animated, {
-  Easing,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
 import { useNavigation } from "@react-navigation/native";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { heightPercentageToDP } from "react-native-responsive-screen";
 
 const WelcomeScreen = () => {
-  const animationProgress = useSharedValue(0);
+  const ring1Padding = useSharedValue(0);
+  const ring2Padding = useSharedValue(0);
+  const logoOpacity = useSharedValue(0);
+  const textOpacity = useSharedValue(0);
+  const textTranslateY = useSharedValue(50);
+
   const navigation = useNavigation();
 
-  useEffect(() => {
-    // Start animation
-    animationProgress.value = withTiming(1, {
-      duration: 2500,
-      easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-    });
-
-    // Navigate after animation completes
-    const timer = setTimeout(() => {
-      navigation.navigate("Home");
-    }, 2800);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Ring animation
+  // Create animated styles
   const ring1Style = useAnimatedStyle(() => ({
-    padding: interpolate(
-      animationProgress.value,
-      [0, 0.5, 1],
-      [0, hp(6), hp(5)],
-    ),
-    opacity: interpolate(animationProgress.value, [0, 0.2, 1], [0, 1, 1]),
+    padding: ring1Padding.value,
   }));
 
   const ring2Style = useAnimatedStyle(() => ({
-    padding: interpolate(
-      animationProgress.value,
-      [0, 0.6, 1],
-      [0, hp(5), hp(4)],
-    ),
-    opacity: interpolate(animationProgress.value, [0, 0.3, 1], [0, 1, 1]),
+    padding: ring2Padding.value,
   }));
 
   const logoStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(animationProgress.value, [0, 0.3, 1], [0, 1, 1]),
-    transform: [
-      {
-        scale: interpolate(
-          animationProgress.value,
-          [0, 0.5, 0.7, 1],
-          [0.5, 1.1, 1, 1],
-        ),
-      },
-    ],
+    opacity: logoOpacity.value,
   }));
 
-  const textContainerStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(animationProgress.value, [0.7, 1], [0, 1]),
-    transform: [
-      {
-        translateY: interpolate(animationProgress.value, [0.7, 1], [30, 0]),
-      },
-    ],
+  const textStyle = useAnimatedStyle(() => ({
+    opacity: textOpacity.value,
+    transform: [{ translateY: textTranslateY.value }],
   }));
+
+  useEffect(() => {
+    // Start animations in sequence
+    ring1Padding.value = withDelay(300, withSpring(heightPercentageToDP(5)));
+    ring2Padding.value = withDelay(500, withSpring(heightPercentageToDP(4)));
+
+    // Fade in logo
+    logoOpacity.value = withDelay(300, withTiming(1, { duration: 800 }));
+
+    // Animate text after rings
+    textOpacity.value = withDelay(1200, withTiming(1, { duration: 800 }));
+    textTranslateY.value = withDelay(1200, withSpring(0, { damping: 12 }));
+
+    // Navigate to home after a delay (let user see the animation)
+    const timer = setTimeout(() => {
+      navigation.navigate("Home");
+    }, 3000); // 3 seconds total
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <View className="flex-1 bg-amber-500 justify-center items-center">
       <StatusBar style="light" />
 
-      {/* logo with animated rings */}
+      {/* logo with rings */}
       <View className="items-center justify-center">
-        <Animated.View
-          className="absolute bg-white/20 rounded-full"
-          style={ring1Style}
-        />
-        <Animated.View
-          className="absolute bg-white/30 rounded-full"
-          style={ring2Style}
-        />
-        <Animated.View style={logoStyle}>
-          <Image
-            source={require("../../assets/images/pizza.png")}
-            style={{ width: 200, height: 200 }}
-            className="rounded-full"
-          />
+        <Animated.View className="bg-white/20 rounded-full" style={ring1Style}>
+          <Animated.View
+            className="bg-white/30 rounded-full"
+            style={ring2Style}
+          >
+            <Animated.View style={logoStyle}>
+              <Image
+                source={require("../../assets/images/pizza.png")}
+                style={{ width: 200, height: 200 }}
+              />
+            </Animated.View>
+          </Animated.View>
         </Animated.View>
       </View>
 
-      {/* animated text */}
-      <Animated.View
-        className="absolute bottom-20 items-center px-4"
-        style={textContainerStyle}
-      >
+      {/* title and punchline with animation */}
+      <Animated.View className="flex items-center mt-10 px-4" style={textStyle}>
         <Text
-          style={{ fontSize: hp(7) }}
+          style={{ fontSize: heightPercentageToDP(7) }}
           className="text-white font-bold tracking-widest text-center"
         >
           Foodie
         </Text>
         <Text
-          style={{ fontSize: hp(2.5) }}
+          style={{ fontSize: heightPercentageToDP(2.5) }}
           className="font-medium text-white tracking-widest mt-4 text-center"
         >
           Food is always right
